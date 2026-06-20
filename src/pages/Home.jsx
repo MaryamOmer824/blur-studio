@@ -4,26 +4,22 @@ import UploadBox from '../components/UploadBox'
 import ImagePreview from '../components/ImagePreview'
 import CanvasEditor from '../components/CanvasEditor'
 import CameraCapture from '../components/CameraCapture'
-import AutoBlurFace from '../components/AutoBlurFace'
 
 function Home() {
   const [image, setImage] = useState(null)
   const [showEditor, setShowEditor] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
-  const [showAutoBlur, setShowAutoBlur] = useState(false)
 
   const handleImageUpload = (imageData) => {
     setImage(imageData)
     setShowEditor(false)
     setShowCamera(false)
-    setShowAutoBlur(false)
   }
 
   const handleRemoveImage = () => {
     setImage(null)
     setShowEditor(false)
     setShowCamera(false)
-    setShowAutoBlur(false)
   }
 
   const handleDownload = () => {
@@ -47,29 +43,24 @@ function Home() {
     setImage(newImageData)
   }
 
-  const handleAutoBlurApply = (blurredImage) => {
-    setImage(blurredImage)
-    setShowAutoBlur(false)
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-vintage-50 via-vintage-100/50 to-vintage-200/30">
+    <div className="min-h-screen bg-gradient-main">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex flex-col items-center gap-8">
+      <main className="container mx-auto px-4 py-12 min-h-[calc(100vh-80px)] flex items-center">
+        <div className="w-full">
           {showCamera ? (
             <CameraCapture 
               onCapture={handleImageUpload}
               onClose={handleCameraClose}
             />
           ) : !image ? (
-            <>
-              <div className="text-center">
-                <h2 className="text-3xl font-bold text-vintage-800">
-                  Create Aesthetic Blurs
+            <div className="flex flex-col items-center gap-8 w-full">
+              <div className="text-center space-y-3">
+                <h2 className="text-4xl md:text-5xl font-bold text-white">
+                  Create <span className="gradient-text">Professional</span> Blurs
                 </h2>
-                <p className="text-vintage-500 mt-2">
+                <p className="text-slate-400 text-lg">
                   Upload an image or take a photo to get started
                 </p>
               </div>
@@ -77,48 +68,38 @@ function Home() {
                 onImageUpload={handleImageUpload}
                 onCameraOpen={handleCameraOpen}
               />
-            </>
+            </div>
           ) : (
             <>
-              {!showEditor && !showAutoBlur ? (
-                <>
+              {!showEditor ? (
+                <div className="flex flex-col items-center gap-8 w-full">
                   <ImagePreview 
                     image={image} 
                     onRemove={handleRemoveImage}
                     onDownload={handleDownload}
+                    onEdit={() => setShowEditor(true)}
                   />
                   
                   <div className="flex flex-wrap gap-4 justify-center">
                     <button 
                       onClick={() => setShowEditor(true)}
                       className="
-                        px-8 py-4 bg-gradient-to-r from-vintage-500 to-vintage-600
-                        text-white rounded-xl font-medium text-lg
-                        transition-all duration-300 shadow-lg hover:shadow-xl
-                        hover:scale-[1.02]
+                        px-8 py-4 btn-primary
+                        rounded-xl font-medium text-lg
+                        shadow-lg shadow-blue-500/25
+                        flex items-center gap-2
                       "
                     >
                       🎨 Open Editor
                     </button>
                     
                     <button 
-                      onClick={() => setShowAutoBlur(true)}
-                      className="
-                        px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500
-                        text-white rounded-xl font-medium text-lg
-                        transition-all duration-300 shadow-lg hover:shadow-xl
-                        hover:scale-[1.02]
-                      "
-                    >
-                      🤖 Auto Blur Face
-                    </button>
-                    
-                    <button 
                       onClick={handleDownload}
                       className="
-                        px-6 py-3 bg-green-600 hover:bg-green-700
-                        text-white rounded-xl font-medium
-                        transition-all duration-300 shadow-md hover:shadow-lg
+                        px-6 py-4 bg-emerald-600 hover:bg-emerald-700
+                        text-white rounded-xl font-medium text-lg
+                        transition-all duration-300 shadow-lg shadow-emerald-500/20
+                        hover:shadow-xl hover:scale-[1.02]
                       "
                     >
                       ⬇️ Download HD
@@ -127,62 +108,41 @@ function Home() {
                     <button 
                       onClick={handleRemoveImage}
                       className="
-                        px-6 py-3 bg-vintage-200 hover:bg-vintage-300
-                        text-vintage-700 rounded-xl font-medium
-                        transition-all duration-300
+                        px-6 py-4 btn-secondary
+                        rounded-xl font-medium text-lg
                       "
                     >
                       📤 Upload New
                     </button>
                   </div>
-                </>
-              ) : showAutoBlur ? (
-                <>
-                  <AutoBlurFace 
-                    image={image} 
-                    onBlurApplied={handleAutoBlurApply}
-                  />
-                  <button 
-                    onClick={() => setShowAutoBlur(false)}
-                    className="
-                      px-6 py-3 bg-vintage-200 hover:bg-vintage-300
-                      text-vintage-700 rounded-xl font-medium
-                      transition-all duration-300
-                    "
-                  >
-                    ← Back
-                  </button>
-                </>
+                </div>
               ) : (
-                <>
+                <div className="flex flex-col items-center gap-8 w-full">
                   <CanvasEditor 
                     image={image} 
                     onImageUpdate={handleImageUpdate}
                   />
                   
-                  <div className="flex gap-4">
-                    <button 
-                      onClick={() => setShowEditor(false)}
-                      className="
-                        px-6 py-3 bg-vintage-200 hover:bg-vintage-300
-                        text-vintage-700 rounded-xl font-medium
-                        transition-all duration-300
-                      "
-                    >
-                      ← Back to Preview
-                    </button>
-                  </div>
-                </>
+                  <button 
+                    onClick={() => setShowEditor(false)}
+                    className="
+                      px-6 py-3 btn-secondary
+                      rounded-xl font-medium
+                    "
+                  >
+                    ← Back to Preview
+                  </button>
+                </div>
               )}
             </>
           )}
         </div>
       </main>
 
-      <footer className="border-t border-vintage-200 mt-8">
+      <footer className="border-t border-white/5 mt-auto">
         <div className="container mx-auto px-4 py-4">
-          <p className="text-center text-vintage-400 text-sm">
-            Made with ❤️ using Vite + React + TensorFlow.js
+          <p className="text-center text-slate-500 text-sm">
+            Made with ❤️ using Vite + React + Canvas API
           </p>
         </div>
       </footer>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { blurEffects } from '../utils/blurEffects'
-
+import { Save, Brush, Zap } from 'lucide-react'
+// VERSION 2.0 - NO UNDO/REDO/RESET
 function CanvasEditor({ image, onImageUpdate }) {
   const canvasRef = useRef(null)
   const [isDrawing, setIsDrawing] = useState(false)
@@ -9,17 +10,16 @@ function CanvasEditor({ image, onImageUpdate }) {
   const [intensity, setIntensity] = useState(50)
   const [ctx, setCtx] = useState(null)
 
-  // Effects list
   const effects = [
-    { id: 'watery', label: '💧 Watery' },
-    { id: 'scratch', label: '🧱 Scratch' },
-    { id: 'pixel', label: '🔲 Pixel' },
-    { id: 'fog', label: '🌫 Fog' },
-    { id: 'glass', label: '✨ Glass' },
-    { id: 'motion', label: '🌀 Motion' }
+    { id: 'watery', label: '💧 Watery', color: 'from-blue-400 to-cyan-400' },
+    { id: 'scratch', label: '🧱 Scratch', color: 'from-orange-400 to-red-400' },
+    { id: 'pixel', label: '🔲 Pixel', color: 'from-purple-400 to-pink-400' },
+    { id: 'fog', label: '🌫 Fog', color: 'from-gray-400 to-slate-400' },
+    { id: 'glass', label: '✨ Glass', color: 'from-emerald-400 to-teal-400' },
+    { id: 'motion', label: '🌀 Motion', color: 'from-indigo-400 to-blue-400' }
   ]
 
-  // Initialize canvas when image loads
+  // Initialize Canvas
   useEffect(() => {
     if (!image || !canvasRef.current) return
 
@@ -27,10 +27,8 @@ function CanvasEditor({ image, onImageUpdate }) {
     const context = canvas.getContext('2d')
     setCtx(context)
 
-    // Load image
     const img = new Image()
     img.onload = () => {
-      // Set canvas size
       const maxWidth = 800
       const maxHeight = 600
       let width = img.width
@@ -47,14 +45,11 @@ function CanvasEditor({ image, onImageUpdate }) {
 
       canvas.width = width
       canvas.height = height
-
-      // Draw image
       context.drawImage(img, 0, 0, width, height)
     }
     img.src = image
   }, [image])
 
-  // Get mouse/touch position on canvas
   const getPosition = (e) => {
     const canvas = canvasRef.current
     const rect = canvas.getBoundingClientRect()
@@ -78,28 +73,20 @@ function CanvasEditor({ image, onImageUpdate }) {
     }
   }
 
-  // Apply blur effect
   const applyBlur = (x, y) => {
     if (!ctx) return
 
-    // Get current image data
     const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
-    
-    // Apply selected effect
     const effect = blurEffects[selectedEffect]
+    
     if (effect) {
       const radius = brushSize
       const intensityValue = intensity / 100
-      
-      // Apply effect to the area
       const result = effect.apply(imageData, x, y, radius, intensityValue)
-      
-      // Put back on canvas
       ctx.putImageData(result, 0, 0)
     }
   }
 
-  // Drawing handlers
   const startDrawing = (e) => {
     setIsDrawing(true)
     const pos = getPosition(e)
@@ -113,30 +100,22 @@ function CanvasEditor({ image, onImageUpdate }) {
   }
 
   const stopDrawing = () => {
-    setIsDrawing(false)
-    // Save current state
+    if (isDrawing && ctx) {
+      setIsDrawing(false)
+      onImageUpdate(ctx.canvas.toDataURL())
+    }
+  }
+
+  const handleSave = () => {
     if (ctx) {
       onImageUpdate(ctx.canvas.toDataURL())
     }
   }
 
-  // Reset to original
-  const resetImage = () => {
-    if (!ctx || !image) return
-    
-    const img = new Image()
-    img.onload = () => {
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-      ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.height)
-      onImageUpdate(ctx.canvas.toDataURL())
-    }
-    img.src = image
-  }
-
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      {/* Canvas */}
-      <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden border border-vintage-200">
+    <div className="w-full max-w-5xl mx-auto space-y-6">
+      {/* Canvas Container */}
+      <div className="relative glass rounded-2xl shadow-2xl shadow-blue-500/20 overflow-hidden border border-white/10">
         <canvas
           ref={canvasRef}
           onMouseDown={startDrawing}
@@ -149,20 +128,35 @@ function CanvasEditor({ image, onImageUpdate }) {
           className="w-full h-auto cursor-crosshair touch-none"
         />
         
-        {/* Instructions overlay */}
+        {/* Top Status Bar */}
+        <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+          <div className="flex gap-2">
+            <span className="px-3 py-1.5 bg-slate-900/80 backdrop-blur-sm text-white text-xs rounded-full font-medium border border-white/10 flex items-center gap-1.5">
+              <Brush className="w-3 h-3" /> {brushSize}px
+            </span>
+            <span className="px-3 py-1.5 bg-slate-900/80 backdrop-blur-sm text-white text-xs rounded-full font-medium border border-white/10 flex items-center gap-1.5">
+              <Zap className="w-3 h-3" /> {intensity}%
+            </span>
+          </div>
+          <span className="px-3 py-1.5 bg-slate-900/80 backdrop-blur-sm text-white text-xs rounded-full font-medium border border-white/10">
+            {effects.find(e => e.id === selectedEffect)?.label}
+          </span>
+        </div>
+
+        {/* Bottom Status */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-          <span className="px-4 py-2 bg-black/50 backdrop-blur-sm text-white text-sm rounded-full">
-            🖌️ Draw on image to apply blur
+          <span className="px-4 py-2 bg-slate-900/80 backdrop-blur-sm text-white/70 text-xs rounded-full font-medium border border-white/10">
+            🖌️ Click & drag to apply effect
           </span>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="mt-6 space-y-6">
+      {/* Controls Panel */}
+      <div className="glass rounded-2xl p-6 border border-white/10 space-y-6">
         {/* Effects Grid */}
         <div>
-          <label className="text-sm font-medium text-vintage-700 block mb-3">
-            Select Effect
+          <label className="text-sm font-semibold text-slate-300 block mb-3">
+            🎨 Choose Effect
           </label>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {effects.map((effect) => (
@@ -170,77 +164,73 @@ function CanvasEditor({ image, onImageUpdate }) {
                 key={effect.id}
                 onClick={() => setSelectedEffect(effect.id)}
                 className={`
-                  px-3 py-2 rounded-xl text-sm font-medium
-                  transition-all duration-200
+                  px-3 py-2.5 rounded-xl text-xs font-medium
+                  transition-all duration-200 relative overflow-hidden group
                   ${selectedEffect === effect.id
-                    ? 'bg-vintage-600 text-white shadow-md scale-[1.02]'
-                    : 'bg-vintage-100 text-vintage-700 hover:bg-vintage-200'
+                    ? `bg-gradient-to-r ${effect.color} text-white shadow-md scale-[1.02]`
+                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white'
                   }
                 `}
               >
-                {effect.label}
+                <span className="relative z-10">{effect.label}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Brush Size */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium text-vintage-700">
-              🖊️ Brush Size
-            </label>
-            <span className="text-sm font-semibold text-vintage-600 bg-vintage-100 px-2 py-0.5 rounded-full">
-              {brushSize}px
-            </span>
+        {/* Brush & Intensity Sliders */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
+                <Brush className="w-4 h-4" /> Brush Size
+              </label>
+              <span className="text-sm font-semibold text-blue-400 bg-blue-500/20 px-3 py-0.5 rounded-full">
+                {brushSize}px
+              </span>
+            </div>
+            <input
+              type="range"
+              min="5"
+              max="80"
+              value={brushSize}
+              onChange={(e) => setBrushSize(Number(e.target.value))}
+              className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+            />
           </div>
-          <input
-            type="range"
-            min="5"
-            max="80"
-            value={brushSize}
-            onChange={(e) => setBrushSize(Number(e.target.value))}
-            className="w-full h-2 rounded-lg bg-vintage-200 accent-vintage-600"
-          />
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
+                <Zap className="w-4 h-4" /> Intensity
+              </label>
+              <span className="text-sm font-semibold text-purple-400 bg-purple-500/20 px-3 py-0.5 rounded-full">
+                {intensity}%
+              </span>
+            </div>
+            <input
+              type="range"
+              min="10"
+              max="100"
+              value={intensity}
+              onChange={(e) => setIntensity(Number(e.target.value))}
+              className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+            />
+          </div>
         </div>
 
-        {/* Intensity */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium text-vintage-700">
-              💪 Intensity
-            </label>
-            <span className="text-sm font-semibold text-vintage-600 bg-vintage-100 px-2 py-0.5 rounded-full">
-              {intensity}%
-            </span>
-          </div>
-          <input
-            type="range"
-            min="10"
-            max="100"
-            value={intensity}
-            onChange={(e) => setIntensity(Number(e.target.value))}
-            className="w-full h-2 rounded-lg bg-vintage-200 accent-vintage-600"
-          />
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-3">
+        {/* Save Button Only */}
+        <div className="flex justify-end pt-4 border-t border-white/5">
           <button
-            onClick={resetImage}
-            className="px-4 py-2 bg-vintage-200 hover:bg-vintage-300 text-vintage-700 rounded-xl font-medium transition-all"
+            onClick={handleSave}
+            className="
+              px-8 py-3 btn-primary
+              rounded-xl font-medium text-sm
+              transition-all duration-200 flex items-center gap-2
+              hover:scale-[1.02] hover:shadow-xl
+            "
           >
-            🔄 Reset
-          </button>
-          <button
-            onClick={() => {
-              if (ctx) {
-                onImageUpdate(ctx.canvas.toDataURL())
-              }
-            }}
-            className="px-4 py-2 bg-vintage-600 hover:bg-vintage-700 text-white rounded-xl font-medium transition-all ml-auto"
-          >
-            💾 Save Changes
+            <Save className="w-4 h-4" /> Save Changes
           </button>
         </div>
       </div>
