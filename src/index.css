@@ -1,574 +1,334 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* ============================================
+   FORCE OVERRIDE - Direct Blue Theme
+   ============================================ */
+
+/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-
-html,
-body {
-
-  min-height:100vh;
-
-  width:100%;
-
+html, body, #root {
+  min-height: 100vh;
+  width: 100%;
 }
-
 
 body {
-
-  font-family:
-  'Inter',
-  -apple-system,
-  BlinkMacSystemFont,
-  "Segoe UI",
-  sans-serif;
-
-
-  background:
-
-  linear-gradient(
-    135deg,
-    #fff8ed,
-    #f3dfc4
-  );
-
-
-  color:#3b2a1a;
-
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #0a1628 !important;
+  color: #e2e8f0 !important;
 }
 
-
-
-#root {
-
-  min-height:100vh;
-
-  width:100%;
-
-}
-
-
-
-
-
-
-/* =====================
-   Scrollbar
-===================== */
-
-
+/* ============================================
+   SCROLLBAR
+   ============================================ */
 ::-webkit-scrollbar {
-
- width:8px;
-
+  width: 8px;
+  height: 8px;
 }
-
-
 ::-webkit-scrollbar-track {
-
- background:#f6ead7;
-
+  background: #0a1628;
 }
-
-
-
 ::-webkit-scrollbar-thumb {
-
- background:#b88958;
-
- border-radius:20px;
-
+  background: linear-gradient(180deg, #2563eb, #3b82f6);
+  border-radius: 20px;
 }
-
-
-
 ::-webkit-scrollbar-thumb:hover {
-
- background:#8b5e34;
-
+  background: #3b82f6;
+}
+::selection {
+  background: #2563eb;
+  color: white;
 }
 
-
-
-
-
-
-
-/* =====================
-   Glass Cards
-===================== */
-
-
+/* ============================================
+   GLASS EFFECTS - Blue Theme
+   ============================================ */
 .glass {
-
-
-background:
-
-rgba(255,255,255,0.65);
-
-
-backdrop-filter:
-
-blur(18px);
-
-
--webkit-backdrop-filter:
-
-blur(18px);
-
-
-
-border:
-
-1px solid rgba(139,94,52,.15);
-
-
-
-box-shadow:
-
-0 20px 50px rgba(92,59,30,.08);
-
-
+  background: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3) !important;
 }
 
-
-
-
-
-
-.glass-light {
-
-
-background:
-
-rgba(255,255,255,.45);
-
-
-backdrop-filter:
-
-blur(15px);
-
-
-border:
-
-1px solid rgba(139,94,52,.1);
-
-
+.glass-dark {
+  background: rgba(10, 22, 40, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(59, 130, 246, 0.1) !important;
 }
 
-
-
-
-
-
-
-
-/* =====================
-Animations
-===================== */
-
-
-@keyframes float {
-
-
-0%,
-100% {
-
-transform:translateY(0);
-
-}
-
-
-50% {
-
-transform:translateY(-10px);
-
-}
-
-
-}
-
-
-
-.animate-float {
-
-animation:
-
-float 3s ease-in-out infinite;
-
-}
-
-
-
-
-
-
-
-@keyframes fadeUp {
-
-
-from {
-
-opacity:0;
-
-transform:translateY(20px);
-
-}
-
-
-to {
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-
-}
-
-
-
-.animate-fade-up {
-
-
-animation:
-
-fadeUp .5s ease forwards;
-
-}
-
-
-
-
-
-
-
-
-
-/* =====================
-Gradient Text
-===================== */
-
-
+/* ============================================
+   GRADIENT TEXT - Blue
+   ============================================ */
 .gradient-text {
-
-
-background:
-
-linear-gradient(
-
-135deg,
-
-#8b5e34,
-
-#c48a52
-
-);
-
-
-
--webkit-background-clip:text;
-
-
--webkit-text-fill-color:transparent;
-
-
+  background: linear-gradient(135deg, #3b82f6, #60a5fa, #3b82f6) !important;
+  background-size: 200% 200% !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: gradientAnim 4s ease-in-out infinite !important;
 }
 
+@keyframes gradientAnim {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
 
-
-
-
-
-
-
-/* =====================
-Buttons
-===================== */
-
-
+/* ============================================
+   BUTTONS - Blue Theme
+   ============================================ */
 .btn-primary {
-
-
-background:
-
-linear-gradient(
-
-135deg,
-
-#9b6b3d,
-
-#6b4323
-
-);
-
-
-
-color:white;
-
-
-transition:
-
-all .3s ease;
-
-
+  background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3) !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
-
-
 
 .btn-primary:hover {
-
-
-transform:
-
-translateY(-2px);
-
-
-box-shadow:
-
-0 15px 35px rgba(139,94,52,.3);
-
-
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.4) !important;
 }
-
-
 
 .btn-primary:active {
-
-
-transform:
-
-translateY(0);
-
-
+  transform: translateY(0px) scale(0.98) !important;
 }
 
+.btn-primary::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent) !important;
+  transition: left 0.6s !important;
+}
 
-
-
-
-
-
+.btn-primary:hover::before {
+  left: 100% !important;
+}
 
 .btn-secondary {
-
-
-background:
-
-#f3dfc4;
-
-
-
-border:
-
-1px solid #dfc29a;
-
-
-
-color:#6b4323;
-
-
-
-transition:
-
-all .3s ease;
-
-
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease !important;
 }
-
-
 
 .btn-secondary:hover {
-
-
-background:
-
-#ead0aa;
-
-
-transform:
-
-translateY(-2px);
-
-
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-2px) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
 }
 
+.btn-success {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
 
+.btn-success:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4) !important;
+}
 
+.btn-danger {
+  background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
 
+.btn-danger:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(239, 68, 68, 0.4) !important;
+}
 
+/* ============================================
+   BACKGROUND
+   ============================================ */
+.bg-gradient-main {
+  background: radial-gradient(ellipse at top, #0f2647, #0a1628) !important;
+}
 
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px) !important;
+  background-size: 50px 50px !important;
+}
 
-
-/* =====================
-Cards
-===================== */
-
-
+/* ============================================
+   CARDS - Blue Theme
+   ============================================ */
 .card-hover {
-
-
-transition:
-
-all .3s ease;
-
-
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
-
 
 .card-hover:hover {
-
-
-transform:
-
-translateY(-5px);
-
-
-box-shadow:
-
-0 20px 50px rgba(92,59,30,.15);
-
-
+  transform: translateY(-8px) scale(1.01) !important;
+  box-shadow: 0 30px 60px rgba(37, 99, 235, 0.15) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
 }
 
-
-
-
-
-
-
-
-/* =====================
-Range Slider
-===================== */
-
-
+/* ============================================
+   RANGE SLIDER - Blue Theme
+   ============================================ */
 input[type="range"] {
-
-
-appearance:none;
-
-
-height:7px;
-
-
-border-radius:20px;
-
-
-background:#ead0aa;
-
-
+  appearance: none !important;
+  width: 100% !important;
+  height: 8px !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.2s !important;
 }
-
-
 
 input[type="range"]::-webkit-slider-thumb {
-
-
-appearance:none;
-
-
-width:18px;
-
-
-height:18px;
-
-
-border-radius:50%;
-
-
-background:#8b5e34;
-
-
-border:3px solid white;
-
-
-cursor:pointer;
-
-
-box-shadow:
-
-0 3px 10px rgba(0,0,0,.2);
-
-
+  appearance: none !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4) !important;
+  transition: all 0.2s !important;
 }
 
-
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2) !important;
+  box-shadow: 0 0 30px rgba(37, 99, 235, 0.6) !important;
+}
 
 input[type="range"]::-moz-range-thumb {
-
-
-width:18px;
-
-
-height:18px;
-
-
-border-radius:50%;
-
-
-background:#8b5e34;
-
-
-border:none;
-
-
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+  border: 0 !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4) !important;
 }
 
-
-
-
-
-
-
-
-/* =====================
-Background
-===================== */
-
-
-.bg-gradient-main {
-
-
-background:
-
-radial-gradient(
-
-circle at top,
-
-#fffaf2,
-
-#f3dfc4
-
-);
-
-
+/* ============================================
+   GLOW - Blue
+   ============================================ */
+.glow-blue {
+  box-shadow: 0 0 40px rgba(37, 99, 235, 0.15) !important;
 }
 
+.glow-blue:hover {
+  box-shadow: 0 0 60px rgba(37, 99, 235, 0.3) !important;
+}
 
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
 
+.animate-float {
+  animation: float 3s ease-in-out infinite !important;
+}
 
+/* ============================================
+   HEADER OVERRIDE
+   ============================================ */
+header.glass {
+  background: rgba(10, 22, 40, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.1) !important;
+}
 
+/* ============================================
+   ALL TEXT COLORS - Force White
+   ============================================ */
+.text-white {
+  color: #ffffff !important;
+}
 
+.text-white\/70 {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
 
-/* =====================
-Glow
-===================== */
+.text-white\/60 {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
 
+.text-white\/50 {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
 
-.glow {
+.text-white\/40 {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
 
+.text-white\/30 {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
 
-box-shadow:
+.text-white\/20 {
+  color: rgba(255, 255, 255, 0.2) !important;
+}
 
-0 0 60px rgba(139,94,52,.15);
+.text-slate-400 {
+  color: #94a3b8 !important;
+}
 
+.text-slate-500 {
+  color: #64748b !important;
+}
 
+/* ============================================
+   BORDER COLORS - Force Blue/White
+   ============================================ */
+.border-white\/10 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.border-white\/5 {
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.border-blue-500 {
+  border-color: #3b82f6 !important;
+}
+
+/* ============================================
+   BACKGROUND OVERRIDES
+   ============================================ */
+.bg-white\/5 {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.bg-white\/10 {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.bg-black\/40 {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.bg-black\/60 {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.bg-black\/80 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
 }
